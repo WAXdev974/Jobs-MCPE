@@ -1,29 +1,67 @@
 <?php
 
-namespace Wax\XXWAXX;
+namespace Wax_Dev\Jobs;
 
-use pocketmine\plugin\XXWAXX;
+use pocketmine\Server;
+use pocketmine\Player;
 
-class main extends Jobs{
-  /**
-     * @var Config
-     */
-    public $Metier;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
 
-    public function onEnable()
-    {
-        $this->Metier = new Config(fille: $this->getDataFloder() . 'db.yml', type:CONFIG::YAML); //Base de donnée !
+use pocketmine\evnt\Listener;
+use pocketmine\plugin\PluginBase;
+
+class Main extends PluginBase implements Listener {
+
+  public function onEnable(){
+    $this->getserver()->getPluginManager()->registerEvent($this, $this);
+    $this->getLogger()->info("Metier a level up");
+  }
+  public function onCommand(CommandSender $sender, Command $cmd, String $Label array $args) : bool {
+
+    switch($cmd->getName()){
+      case "jobs ui 1"
+      if($sender instanceof Player){
+        $this->openMyForm($sender);
+        //menu jobs//
+      }else {
+        $sender->sendMessage("Metier a level up");
+      }
     }
- 
-    public function onCommand(CommandSender $sender, Command $Command, string $label, array $args): bool
-    {
-        $commandName = strtolwer($command->getName());
-        if($sender instanceof Player){
- 
-         switch ($commandName){
-             case 'Jobs':
-                 $playerName = $sender->getName();
-               self $player = $sender->getName('...');
-                 }
-   
+    return true;
+  }
+  public function openMyForm($Player){
+    $api = $this->getServer()->getPluginManager()->getPlugin("FormAPI");
+    $form = $api->CreateSimpleForm(function (Player $player, int $data = null){
+      $result = $data;
+      if($result === null){
+        return true;
+      }
+      switch($result){
+        case 0:
+          //Boutton Metier//
+          $player->senderMessage("vous avez équiper le metier Mineur ! ");
+          break;
+
+          case 1:
+             //Boutton Metier//
+          $player->senderMessage("vous avez équiper le metier Assassin ! ");
+            break
+
+            case 2:
+               //Boutton Metier//
+          $player->senderMessage("vous avez équiper le metier Farmeur ! ");
+              break
+      }
+    });
+    $form->setTitle("Menu des Metier");
+    $form->setContent("Clique sur un Metier pour l'équiper");
+    $form->addButton("Minage");
+    $form->addButton("Assassin ");
+    $form->addButton("Farmeur");
+    $form->sendToPlayer($player);
+    return form;
+
+    //sauvegarde Metier / Jobs//
+  }
 }
